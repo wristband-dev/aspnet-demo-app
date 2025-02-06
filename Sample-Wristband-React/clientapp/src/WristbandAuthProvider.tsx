@@ -19,9 +19,9 @@ interface IOwnProps {
 function WristbandAuthProvider({ children, disableAuthForTesting, securing }: PropsWithChildren<IOwnProps>) {
     const queryClient = useQueryClient();
     const [isAuthenticated, setIsAuthenticated] = useState<IsAuthenticatedOptions>("unknown");
-  
+
     // Bootstrap the application with the authenticated user's session data.
-    useEffect(() => {    
+    useEffect(() => {
         const fetchSession = async () => {
             if (disableAuthForTesting) {
                 setIsAuthenticated("authenticated");
@@ -62,10 +62,10 @@ function WristbandAuthProvider({ children, disableAuthForTesting, securing }: Pr
                 await redirectToLogout();
             }
         };
-  
+
         fetchSession();
     }, [disableAuthForTesting, queryClient]);
-  
+
     return (
         <WristbandAuthContext.Provider value={{ isAuthenticated }}>
             {isAuthenticated === "unknown" || isAuthenticated === "not-authenticated" ?

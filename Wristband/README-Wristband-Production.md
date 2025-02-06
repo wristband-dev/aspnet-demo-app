@@ -3,7 +3,6 @@
 Some Prod
 ```
 Identifier: --some-identifier--
-Tenancy: Multi-Tenant
 Environment Type: Production
 Domain Name: someprod
 Application Vanity Domain: someprod-parent.us.wristband.dev
