@@ -40,7 +40,7 @@
     private string GetApiServerLogoutUrl()
     {
         var baseUri = NavigationManager.BaseUri;
-        return $"{baseUri}api/logout";
+        return $"{baseUri}api/auth/logout";
     }
 
     public class LogoutResponse

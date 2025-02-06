@@ -63,7 +63,7 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
             }
 
             var baseUri = mNavigationManager.BaseUri;
-            var authStateUrl = $"{baseUri}api/auth/auth-state";
+            var authStateUrl = $"{baseUri}api/session";
             var response = await mHttpClient.GetAsync(authStateUrl);
             if (response.IsSuccessStatusCode)
             {

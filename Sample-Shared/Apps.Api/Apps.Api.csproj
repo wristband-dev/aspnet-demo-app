@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <UserSecretsId>6586ff53-e4e2-41cc-9627-f878e5679a8c</UserSecretsId>
+    <UserSecretsId>--some-identifier--</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

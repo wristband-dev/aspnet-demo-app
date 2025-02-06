@@ -46,8 +46,8 @@
 
         var baseUri = NavigationManager.BaseUri;
         return string.IsNullOrEmpty(loginHint)
-            ? $"{baseUri}api/login?return_url={returnUrl}"
-            : $"{baseUri}api/login?return_url={returnUrl}&login_hint={Uri.EscapeDataString(loginHint)}";
+            ? $"{baseUri}api/auth/login?return_url={returnUrl}"
+            : $"{baseUri}api/auth/login?return_url={returnUrl}&login_hint={Uri.EscapeDataString(loginHint)}";
     }
 
     public class LoginResponse

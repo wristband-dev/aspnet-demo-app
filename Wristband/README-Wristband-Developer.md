@@ -3,7 +3,6 @@
 Some Test
 ```
 Identifier: --some-identifier--
-Tenancy: Multi-Tenant
 Environment Type: Development
 Domain Name: sometest
 Application Vanity Domain: sometest-parent.us.wristband.dev

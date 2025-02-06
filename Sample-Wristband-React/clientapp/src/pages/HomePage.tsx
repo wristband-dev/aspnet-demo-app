@@ -1,26 +1,44 @@
 import { useCallback, useState } from "react";
+import axios from "axios";
+
 import csharpLogo from "../assets/csharp.png";
 import reactLogo from "../assets/react.svg";
 import wristbandLogo from "../assets/wristband.png";
-
+import { wristbandApiClient } from "../wristbandApiClient";
 import { redirectToLogout } from "../wristbandUtils";
 
 const HomePage = () => {
     const [count, setCount] = useState(0);
     const [protectedResult, setProtectedResult] = useState(0);
     const [unprotectedResult, setUnprotectedResult] = useState(0);
-        
+
     const callProtectedEndpoint = useCallback(async () => {
-        const response = await fetch("/api/protected");
-        const result = await response.json() as { message: string, value: number };
-        setProtectedResult((prior) => prior + result.value);
+        try {
+            const response = await wristbandApiClient.get("/api/protected");
+            const result = response.data as { message: string, value: number };
+            setProtectedResult((prior) => prior + result.value);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error('Axios Error:', error.response?.status, error.response?.data);
+            } else {
+                console.error('Unexpected Error:', error);
+            }
+        }
     }, [setProtectedResult]);
 
     const callUnprotectedEndpoint = useCallback(async () => {
-        const response = await fetch("/api/unprotected");
-        const result = await response.json() as { message: string, value: number };            
-        setUnprotectedResult((prior) => prior + result.value);
-    }, [setUnprotectedResult]);
+      try {
+          const response = await wristbandApiClient.get("/api/unprotected");
+          const result = response.data as { message: string, value: number };
+          setUnprotectedResult((prior) => prior + result.value);
+      } catch (error) {
+          if (axios.isAxiosError(error)) {
+              console.error('Axios Error:', error.response?.status, error.response?.data);
+          } else {
+              console.error('Unexpected Error:', error);
+          }
+      }
+  }, [setUnprotectedResult]);
 
     return (
         <>
