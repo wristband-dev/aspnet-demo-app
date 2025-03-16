@@ -22,10 +22,7 @@
 # Invotastic for Business (C#) -- A multi-tenant demo app
 
 This repo contains a pair of simple Hello World examples demonstrating how to use the Wristband Auth SDK
-with a C# backend and either React Vite or Blazor WebAssembly frontends. The repo uses Microsoft 
-Aspire to launch the C# Asp.Net Core Backend API project, frontend project, and a YARP (Yet Another
-Reverse Proxy) to expose the frontend and backend projects as a single endpoint to simplify sharing 
-cookies between them (no CORS required).
+with a C# backend and  a React Vite frontend. The repo uses Microsoft  Aspire to launch the C# Asp.Net Core Backend API project, frontend project, and a YARP (Yet Another Reverse Proxy) to expose the frontend and backend projects as a single endpoint to simplify sharing cookies between them (no CORS required).
 
 When an unauthenticated user attempts to access the frontend, it will redirect to the C# backend's Login Endpoint, which in turn redirects the user to Wristband to authenticate. Wristband then redirects the user back to the API project which sets a session cookie before returning the user's browser to the frontend project. The frontend project does not need any secrets or other special handling since all authentication/authorization is handled by the API project.
 
@@ -71,16 +68,10 @@ Copy those values, then create an environment variable file on the server at: `<
 > Make sure you are in the root directory of this repository.
 
 With Microsoft Aspire, you will launch both the C# backend AND the desired frontend simultaneously. YARP (Yet Another
-Reverse Proxy) will expose the frontend and backend projects on port `6001`. To run from the command line, you can use the following commands from this projects root directory:
+Reverse Proxy) will expose the frontend and backend projects on port `6001`. To run from the command line, you can use the following command from this project's root directory:
 
-**Using React Frontend**
 ```bash
 dotnet run --project ./react-frontend/AppHost/
-```
-
-**Using Blazor WASM Frontend**
-```bash
-dotnet run --project ./blazor-wasm-frontend/AppHost/
 ```
 
 For debugging, using either Visual Studio or Rider, launch the AppHost project using the Aspire launch configuration. The [Microsoft Aspire dashboard](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/overview) is located at `http://localhost:15043` where you have access to logs and traces.
@@ -138,7 +129,7 @@ This Invotastic for Business demo app utilizes the [Backend for Frontend (BFF) p
 - Orchestrating all API calls from the frontend to Wristband and other downstream API calls.
 - Destroying the application session and revoking the refresh token when a user logs out.
 
-API calls made from React to NodeJS pass along the application session cookie and a [CSRF token](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie) with every request.  The server has middlewares for all protected routes that are responsbile for:
+API calls made from the frontend to C# pass along the application session cookie and a [CSRF token](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie) with every request.  The server has middlewares for all protected routes that are responsbile for:
 
 - Validating and refreshing the access token (if necessary)
 - "Touching" the application session cookie to extend session expiration

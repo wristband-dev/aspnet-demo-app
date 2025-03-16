@@ -10,7 +10,7 @@ import { isOwnerRole } from './utils/wristband-utils.ts';
 
 // First, cast the unknown metadata to your session endpoint's data type.
 // Then, transform it to your expected session data type.
-const transformSessionMetadata = (metadata: unknown) => {
+const transformSessionMetadata = (metadata: unknown): MySessionData => {
   const apiSessionData = metadata as ApiSessionData;
   return {
     email: apiSessionData.email,

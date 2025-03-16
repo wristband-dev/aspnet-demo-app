@@ -11,10 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apps.Yarp", "aspnet-backend
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireServiceDefaults", "aspnet-backend\AspireServiceDefaults\AspireServiceDefaults.csproj", "{3083C4CA-DF34-4354-ADB7-B3A0A5E3E617}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppHost", "blazor-wasm-frontend\AppHost\AppHost.csproj", "{6B6EC377-ACD5-43D5-889B-693EFAF92BD3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apps.Blazor", "blazor-wasm-frontend\Apps.Blazor\Apps.Blazor.csproj", "{C85A9CC1-523F-4667-9DD2-CC2690020B5B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

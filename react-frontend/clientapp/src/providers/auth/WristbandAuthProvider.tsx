@@ -43,10 +43,7 @@ export function WristbandAuthProvider<TSessionMetaData = unknown>({
     : (isAuthenticated ? AuthStatus.AUTHENTICATED : AuthStatus.UNAUTHENTICATED);
 
   const updateMetadata = useCallback((newMetadata: Partial<TSessionMetaData>) => {
-    setMetadata(prevData => ({
-      ...prevData,
-      ...newMetadata
-    }));
+    setMetadata(prevData => ({ ...prevData, ...newMetadata }));
   }, []);
 
   // Bootstrap the application with the authenticated user's session data.

@@ -104,6 +104,8 @@ public static class AuthRoutes
                 isAuthenticated = SessionUtils.GetIsAuthenticated(httpContext),
                 userId = SessionUtils.GetStringSessionClaim(httpContext, "userId"),
                 tenantId = SessionUtils.GetStringSessionClaim(httpContext, "tenantId"),
+                // NOTE: If you want to avoid stale data, you should load any metadata values from your backend datastore
+                // instead of relying on values in your cookie session.
                 metadata = new
                 {
                     email = SessionUtils.GetStringSessionClaim(httpContext, "email"),
