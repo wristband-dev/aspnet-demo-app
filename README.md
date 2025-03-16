@@ -21,8 +21,7 @@
 
 # Invotastic for Business (C#) -- A multi-tenant demo app
 
-This repo contains a pair of simple Hello World examples demonstrating how to use the Wristband Auth SDK
-with a C# backend and  a React Vite frontend. The repo uses Microsoft  Aspire to launch the C# Asp.Net Core Backend API project, frontend project, and a YARP (Yet Another Reverse Proxy) to expose the frontend and backend projects as a single endpoint to simplify sharing cookies between them (no CORS required).
+This repo contains a simple Hello World example demonstrating how to use the Wristband Auth SDK with a C# backend and a React Vite frontend. The repo uses Microsoft Aspire to launch the C# Asp.Net Core Backend API project, frontend project, and a YARP (Yet Another Reverse Proxy) to expose the frontend and backend projects as a single endpoint to simplify sharing cookies between them (no CORS required).
 
 When an unauthenticated user attempts to access the frontend, it will redirect to the C# backend's Login Endpoint, which in turn redirects the user to Wristband to authenticate. Wristband then redirects the user back to the API project which sets a session cookie before returning the user's browser to the frontend project. The frontend project does not need any secrets or other special handling since all authentication/authorization is handled by the API project.
 
@@ -67,8 +66,7 @@ Copy those values, then create an environment variable file on the server at: `<
 > [!WARNING]
 > Make sure you are in the root directory of this repository.
 
-With Microsoft Aspire, you will launch both the C# backend AND the desired frontend simultaneously. YARP (Yet Another
-Reverse Proxy) will expose the frontend and backend projects on port `6001`. To run from the command line, you can use the following command from this project's root directory:
+With Microsoft Aspire, you will launch both the C# backend AND the desired frontend simultaneously. YARP (Yet Another Reverse Proxy) will expose the frontend and backend projects on port `6001`. To run from the command line, you can use the following command from this project's root directory:
 
 ```bash
 dotnet run --project ./react-frontend/AppHost/
