@@ -28,10 +28,11 @@ builder.Services.ConfigureHttpJsonOptions(json =>
 
 /* WRISTBAND_TOUCHPOINT - AUTHENTICATION */
 // Add the Wristband Auth SDK
-bool isVanityDomainFormat = builder.Configuration["DOMAIN_FORMAT"] == "VANITY_DOMAIN";
-string demoAppHost = isVanityDomainFormat ? "{tenant_domain}.business.invotastic.com:6001" : "localhost:6001";
 builder.Services.AddWristbandAuth(options =>
 {
+  bool isVanityDomainFormat = builder.Configuration["DOMAIN_FORMAT"] == "VANITY_DOMAIN";
+  string demoAppHost = isVanityDomainFormat ? "{tenant_domain}.business.invotastic.com:6001" : "localhost:6001";
+
   options.ClientId = builder.Configuration["CLIENT_ID"];
   options.ClientSecret = builder.Configuration["CLIENT_SECRET"];
   options.CustomApplicationLoginPageUrl = string.Empty;

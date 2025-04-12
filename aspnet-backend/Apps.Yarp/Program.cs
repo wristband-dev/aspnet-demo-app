@@ -26,6 +26,7 @@ app.MapReverseProxy(proxyPipeline =>
         //
         // Diagnostic middleware
         //
+        #pragma warning disable CS0162 // Unreachable code detected
         proxyPipeline.Use((context, next) =>
         {
             // Can read data from the request via the context
@@ -43,7 +44,8 @@ app.MapReverseProxy(proxyPipeline =>
             // Important - required to move to the next step in the proxy pipeline
             return next();
         });
-    }
+#pragma warning restore CS0162 // Unreachable code detected
+  }
 });
 
 app.Run();

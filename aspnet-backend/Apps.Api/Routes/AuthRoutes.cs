@@ -11,13 +11,15 @@ public static class AuthRoutes
         // ////////////////////////////////////
         //   LOGIN ENDPOINT
         // ////////////////////////////////////
-        app.MapGet("/auth/login", async (HttpContext httpContext, IWristbandAuthService authService) =>
+        app.MapGet("/auth/login", async (HttpContext httpContext, IWristbandAuthService wristbandAuth) =>
         {
-            try {
+            try
+            {
                 /* WRISTBAND_TOUCHPOINT - AUTHENTICATION */
-                var wristbandLoginUrl = await authService.Login(httpContext, null);
+                var wristbandLoginUrl = await wristbandAuth.Login(httpContext, null);
                 return Results.Redirect(wristbandLoginUrl);
-            } catch (Exception ex) {
+            } catch (Exception ex)
+            {
                 Console.WriteLine($"Unexpected error: {ex}");
                 return Results.Problem(detail: $"Unexpected error: {ex.Message}", statusCode: 500);
             }
@@ -28,11 +30,12 @@ public static class AuthRoutes
         // ////////////////////////////////////
         //   CALLBACK ENDPOINT
         // ////////////////////////////////////
-        app.MapGet("/auth/callback", async (HttpContext httpContext, IWristbandAuthService authService) =>
+        app.MapGet("/auth/callback", async (HttpContext httpContext, IWristbandAuthService wristbandAuth) =>
         {
-            try {
+            try
+            {
                 /* WRISTBAND_TOUCHPOINT - AUTHENTICATION */
-                var callbackResult = await authService.Callback(httpContext);
+                var callbackResult = await wristbandAuth.Callback(httpContext);
 
                 // Some edge cases will attempt to redirect to a login URL to restart the flow.
                 if (callbackResult.Result == CallbackResultType.REDIRECT_REQUIRED)
@@ -53,7 +56,9 @@ public static class AuthRoutes
                         ? $"http://{callbackResult.CallbackData.TenantDomainName}.business.invotastic.com:6001"
                         : "http://localhost:6001";
                 return Results.Redirect(tenantPostLoginRedirectUrl);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Console.WriteLine($"Unexpected error: {ex}");
                 return Results.Problem(detail: $"Unexpected error: {ex.Message}", statusCode: 500);
             }
@@ -64,7 +69,7 @@ public static class AuthRoutes
         // ////////////////////////////////////
         //   LOGOUT ENDPOINT
         // ////////////////////////////////////
-        app.MapGet("/auth/logout", async (HttpContext httpContext, IWristbandAuthService authService) =>
+        app.MapGet("/auth/logout", async (HttpContext httpContext, IWristbandAuthService wristbandAuth) =>
         {
             httpContext.Response.Cookies.Delete("XSRF-TOKEN");
 
@@ -75,7 +80,7 @@ public static class AuthRoutes
             await SessionUtils.DestroySession(httpContext);
 
             /* WRISTBAND_TOUCHPOINT - AUTHENTICATION */
-            var wristbandLogoutUrl = await authService.Logout(httpContext, new LogoutConfig
+            var wristbandLogoutUrl = await wristbandAuth.Logout(httpContext, new LogoutConfig
             {
                 RedirectUrl = null,
                 RefreshToken = refreshToken ?? null,
