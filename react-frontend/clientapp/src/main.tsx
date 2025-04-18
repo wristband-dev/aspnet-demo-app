@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { WristbandAuthProvider } from '@wristband/react-client-auth';
 
 import './index.css';
 
 import App from './app/App.tsx';
-import { WristbandAuthProvider } from './providers/auth';
 import { MySessionData, ApiSessionData } from './types';
 import { isOwnerRole } from './utils/wristband-utils.ts';
 

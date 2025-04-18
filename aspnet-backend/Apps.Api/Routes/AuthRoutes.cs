@@ -106,7 +106,6 @@ public static class AuthRoutes
 
             return Results.Ok(new
             {
-                isAuthenticated = SessionUtils.GetIsAuthenticated(httpContext),
                 userId = SessionUtils.GetStringSessionClaim(httpContext, "userId"),
                 tenantId = SessionUtils.GetStringSessionClaim(httpContext, "tenantId"),
                 // NOTE: If you want to avoid stale data, you should load any metadata values from your backend datastore

@@ -21,13 +21,32 @@
 
 # Invotastic for Business (C#) -- A multi-tenant demo app
 
-This repo contains a simple Hello World example demonstrating how to use the Wristband Auth SDK with a C# backend and a React Vite frontend. The repo uses Microsoft Aspire to launch the C# Asp.Net Core Backend API project, frontend project, and a YARP (Yet Another Reverse Proxy) to expose the frontend and backend projects as a single endpoint to simplify sharing cookies between them (no CORS required).
+This repo contains a simple Hello World example demonstrating how to use the Wristband Auth SDK with a C# backend and a React Vite frontend. The repo uses Microsoft Aspire to launch the C# Asp.Net Core Backend API project, frontend project, and a YARP (Yet Another Reverse Proxy) to expose the frontend and backend projects as a single endpoint to eliminate the need for CORS.
 
-When an unauthenticated user attempts to access the frontend, it will redirect to the C# backend's Login Endpoint, which in turn redirects the user to Wristband to authenticate. Wristband then redirects the user back to the API project which sets a session cookie before returning the user's browser to the frontend project. The frontend project does not need any secrets or other special handling since all authentication/authorization is handled by the API project.
+When an unauthenticated user attempts to access the frontend, it will redirect to the C# backend's Login Endpoint, which in turn redirects the user to Wristband to authenticate. Wristband then redirects the user back to your application's Callback Endpoint which sets a session cookie before returning the user's browser to the frontend project. The frontend does not need any secrets or other special handling since all authentication/authorization is handled by your C# server
 
 <br>
 <hr />
 <br>
+
+## Requirements
+
+This demo app requires .NET SDK 8 for the C# server that runs. If you don't have it installed already, you can download and install it from the official .NET website:
+1. Visit [https://dotnet.microsoft.com/download/dotnet/8.0](https://dotnet.microsoft.com/download/dotnet/8.0).
+2. Download and run the .NET 8 SDK installer for your operating system.
+3. Verify the installation by opening a terminal or command prompt and running:
+```bash
+dotnet --version # Should show 8.0.x or higher
+```
+
+Additionally, the React frontend requires Node.js version 20 or higher with `npm`. To install:
+1. Visit [https://nodejs.org](https://nodejs.org).
+2. Download and run the installer for the LTS version (which should be v20.x or higher).
+3. Verify the installation by opening a terminal or command prompt and running:
+```bash
+node --version   # Should show v20.x.x or higher
+npm --version    # Should show v10.x.x or higher (for Node 20+)
+```
 
 ## Getting Started
 
@@ -61,7 +80,31 @@ After completing demo app creation, you will be prompted with values that you sh
 
 Copy those values, then create an environment variable file on the server at: `<project_root_dir>/aspnet-backend/Apps.Api/.env`. Once created, paste the copied values into this file.
 
-### 4) Run the application
+### 4) Install dependencies
+
+Before attempting to run the application, you'll need to install all project dependencies in both C# and React.
+
+#### .NET dependencies
+
+From the root directory of this repo, run the following commands to install dependencies and build all C# projects:
+
+```bash
+dotnet restore
+dotnet build
+```
+
+#### React dependencies
+
+Navigate into React project directory where the `package.json` file is located and install all dependencies:
+
+```bash
+cd ./react-frontend/clientapp
+npm install
+```
+
+Once done, you can navigate back to the root directory to run the application.
+
+### 5) Run the application
 
 > [!WARNING]
 > Make sure you are in the root directory of this repository.
@@ -84,7 +127,7 @@ For debugging, using either Visual Studio or Rider, launch the AppHost project u
 
 Now that the Invotastic demo app is up and running, you can sign up your first customer on the Signup Page at the following location:
 
-- `http://{application_vanity_domain}/signup`, where `{application_vanity_domain}` should be replaced with the value of the "Application Vanity Domain" value of the Invotastic application (can be found in the Wristband Dashboard by clicking the Application Settings side nav menu).
+- `https://{application_vanity_domain}/signup`, where `{application_vanity_domain}` should be replaced with the value of the "Application Vanity Domain" value of the Invotastic application (can be found in the Wristband Dashboard by clicking the Application Settings side nav menu).
 
 This signup page is hosted by Wristband.  Completing the signup form will provision both a new tenant with the specified tenant domain name and a new user that is assigned to that tenant.
 
@@ -99,7 +142,7 @@ For reference, the home page of this Invotastic demo app can be accessed at the 
 
 Users of Invotastic can access the Invotastic Application-level Login Page at the following location:
 
-- `http://{application_vanity_domain}/login`, where `{application_vanity_domain}` should be replaced with the value of the "Application Vanity Domain" value of the Invotastic application (can be found in the Wristband Dashboard by clicking the Application Settings side nav menu).
+- `https://{application_vanity_domain}/login`, where `{application_vanity_domain}` should be replaced with the value of the "Application Vanity Domain" value of the Invotastic application (can be found in the Wristband Dashboard by clicking the Application Settings side nav menu).
 
 This login page is hosted by Wristband.  Here, the user will be prompted to enter either their email or their tenant's domain name.  Doing so will redirect the user to the Tenant-level Login Page for their specific tenant.
 
@@ -118,7 +161,7 @@ When a new user signs up their company, they are assigned the "Owner" role by de
 
 ### Architecture
 
-This Invotastic for Business demo app utilizes the [Backend for Frontend (BFF) pattern](https://samnewman.io/patterns/architectural/bff/).  The C# server is responsible for:
+This Invotastic for Business demo app utilizes the [Backend for Frontend (BFF) pattern](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps#name-backend-for-frontend-bff).  The C# server is responsible for:
 
 - Storing the client ID and secret.
 - Handling the OAuth2 authorization code flow redirections to and from Wristband during user login.
@@ -156,9 +199,13 @@ Here are some options:
 
 <br>
 
-## Wristband ASP.NET SDK
+## Wristband ASP.NET Auth SDK
 
 This demo app is leveraging the [Wristband aspnet-auth SDK](https://github.com/wristband-dev/aspnet-auth) for all authentication interaction in the C# server. Refer to that GitHub repository for more information.
+
+## Wristband React Client Auth SDK
+
+This demo app is leveraging the [Wristband react-client-auth SDK](https://github.com/wristband-dev/react-client-auth) for any authenticated session interaction in the React frontend. Refer to that GitHub repository for more information.
 
 ## CSRF Protection
 
