@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-
-import { redirectToLogout } from "../utils/wristband-utils.ts";
+import { redirectToLogout } from "@wristband/react-client-auth";
 
 const LogoutPage = () => {
   useEffect(() => {
     const redirect = async () => {
-      await redirectToLogout();
+      await redirectToLogout('/api/auth/logout');
     };
 
     redirect();

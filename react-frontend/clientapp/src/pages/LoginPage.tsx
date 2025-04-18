@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 
-import { redirectToLogin } from "../utils/wristband-utils.ts";
+import { redirectToLogin } from "@wristband/react-client-auth";
 
 const LoginPage = () => {
   useEffect(() => {
     const redirect = async () => {
-      await redirectToLogin();
+      await redirectToLogin('/api/auth/login');
     };
 
     redirect();

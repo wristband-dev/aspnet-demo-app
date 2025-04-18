@@ -29,7 +29,6 @@ public static class SessionUtils
     // Prepare claims for session
     var claims = new List<Claim>
         {
-            CreateClaim("isAuthenticated", string.IsNullOrEmpty(callbackData.AccessToken) ? "false" : "true"),
             CreateClaim("accessToken", callbackData.AccessToken),
             CreateClaim("refreshToken", callbackData.RefreshToken),
             // Convert expiration seconds to a Unix timestamp in milliseconds.
@@ -60,8 +59,7 @@ public static class SessionUtils
     {
       // Update token claims if refresh was necessary
       claims = claims
-          .Where(c => c.Type is not ("isAuthenticated" or "accessToken" or "refreshToken" or "expiresAt"))
-          .Append(new Claim("isAuthenticated", string.IsNullOrEmpty(tokenData.AccessToken) ? "false" : "true"))
+          .Where(c => c.Type is not ("accessToken" or "refreshToken" or "expiresAt"))
           .Append(new Claim("accessToken", tokenData.AccessToken))
           .Append(new Claim("refreshToken", tokenData.RefreshToken ?? string.Empty))
           // Convert expiration seconds to a Unix timestamp in milliseconds.
@@ -93,11 +91,6 @@ public static class SessionUtils
     return !string.IsNullOrEmpty(claimValue)
         ? JsonSerializer.Deserialize<List<WristbandRole>>(claimValue) ?? []
         : [];
-  }
-
-  public static bool GetIsAuthenticated(HttpContext context)
-  {
-    return context.User.FindFirst("isAuthenticated")?.Value == "true";
   }
 
   public static long GetExpiresAt(HttpContext context)

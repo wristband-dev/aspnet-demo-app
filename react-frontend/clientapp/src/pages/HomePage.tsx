@@ -1,12 +1,11 @@
 import { useCallback, useState } from "react";
 import { isAxiosError } from "axios";
+import { redirectToLogout, useWristbandSession } from '@wristband/react-client-auth';
 
 import csharpLogo from "../assets/csharp.png";
 import reactLogo from "../assets/react.svg";
 import wristbandLogo from "../assets/wristband.png";
 import { backendApiClient } from "../api/backend-api-client";
-import { redirectToLogout } from "../utils/wristband-utils";
-import { useWristbandSession } from "../providers/auth";
 import { MySessionData } from "../types";
 
 const HomePage = () => {
@@ -18,11 +17,7 @@ const HomePage = () => {
   const { metadata, userId, tenantId, updateMetadata } = useWristbandSession<MySessionData>();
 
   const { hasOwnerRole } = metadata;
-  const mySessionData = JSON.stringify({
-    userId: userId,
-    tenantId: tenantId,
-    metadata: metadata,
-  });
+  const mySessionData = JSON.stringify({ userId, tenantId, metadata });
 
   const generateRandomNameForSession = () => {
     const newName = Math.random().toString(36).substring(2);
@@ -95,7 +90,7 @@ const HomePage = () => {
         </button>
       </div>
       <div className="card">
-        <button onClick={() => redirectToLogout()}>
+        <button onClick={() => redirectToLogout('/api/auth/logout')}>
           Logout
         </button>
       </div>

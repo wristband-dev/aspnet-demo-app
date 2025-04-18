@@ -32,14 +32,6 @@ public class AuthMiddleware
             return;
         }
 
-        var isAutheticated = SessionUtils.GetIsAuthenticated(context);
-        if (!isAutheticated)
-        {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync("Unauthorized access: user not authenticated");
-            return;
-        }
-
         try
         {
             var refreshToken = SessionUtils.GetStringSessionClaim(context, "refreshToken");

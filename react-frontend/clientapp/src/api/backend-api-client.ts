@@ -1,6 +1,7 @@
 import axios from "axios";
 
-import { isForbiddenError, isUnauthorizedError, redirectToLogin } from "../utils/wristband-utils";
+import { isForbiddenError, isUnauthorizedError } from "../utils/wristband-utils";
+import { redirectToLogin } from "@wristband/react-client-auth";
 
 /* CSRF_TOUCHPOINT */
 const backendApiClient = axios.create({
@@ -17,7 +18,7 @@ const backendApiClient = axios.create({
 // You can optionally catch HTTP 403s as well.
 const unauthorizedAccessInterceptor = async (error: { response: { status: number } }) => {
   if (isUnauthorizedError(error) || isForbiddenError(error)) {
-    await redirectToLogin();
+    redirectToLogin('/api/auth/login');
   }
 
   return Promise.reject(error);
