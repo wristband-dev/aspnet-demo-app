@@ -1,5 +1,4 @@
-To keep configuration changes to a minimum when switching from local development to production,
-this sample assumes you are using a free cloudflare tunnel to access your local development server
+If you want to keep configuration changes to a minimum when switching from local development to production, you can use a free cloudflare tunnel to access your local development server
 via a publicly accessible URL with a valid SSL certificate (provided automatically by cloudflare).
 
 NOTE: If you are new to cloudflare tunnels, the following blog post has some additional details on 
@@ -22,7 +21,7 @@ cloudflared tunnel create mytunnelname
 cloudflared tunnel route dns mytunnelname mysubdomainname
 ```
 - list your available tunnels via `cloudflared tunnel list`
-- Create a `~/.cloudflared/config.yml` file containing the tunnel identifier and correct port number for your localhost service. NOTE: in our example we are using a http endpoint which we currently have running on 6001 instead of our locah https endpoint which we currently have running on 7001. NOTE ALSO: You can add additional CNAMES and that connect to additional local services by adding additional `- hostname:` and `  service` pairs.
+- Create a `~/.cloudflared/config.yml` file containing the tunnel identifier and correct port number for your localhost service. NOTE: in our example we are using a http endpoint which we currently have running on 6001 instead of our local https endpoint which we currently have running on 7001. NOTE ALSO: You can add additional CNAMES and that connect to additional local services by adding additional `- hostname:` and `  service` pairs.
 ```
 tunnel: your-tunnel-uuid
 credentials-file: /Users/whatever/.cloudflared/your-tunnel-uuid.json

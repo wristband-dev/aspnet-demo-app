@@ -52,10 +52,7 @@ public static class AuthRoutes
                 // Generate the CSRF token cookie.
                 CsrfUtils.UpdateCsrfTokenCookie(httpContext, csrfSecret);
 
-                var tenantPostLoginRedirectUrl = Environment.GetEnvironmentVariable("DOMAIN_FORMAT") == "VANITY_DOMAIN"
-                        ? $"http://{callbackResult.CallbackData.TenantDomainName}.business.invotastic.com:6001"
-                        : "http://localhost:6001";
-                return Results.Redirect(tenantPostLoginRedirectUrl);
+                return Results.Redirect("http://localhost:6001");
             }
             catch (Exception ex)
             {
