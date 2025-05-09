@@ -30,22 +30,19 @@ builder.Services.ConfigureHttpJsonOptions(json =>
 // Add the Wristband Auth SDK
 builder.Services.AddWristbandAuth(options =>
 {
-  bool isVanityDomainFormat = builder.Configuration["DOMAIN_FORMAT"] == "VANITY_DOMAIN";
-  string demoAppHost = isVanityDomainFormat ? "{tenant_domain}.business.invotastic.com:6001" : "localhost:6001";
-
   options.ClientId = builder.Configuration["CLIENT_ID"];
   options.ClientSecret = builder.Configuration["CLIENT_SECRET"];
   options.CustomApplicationLoginPageUrl = string.Empty;
   // NOTE: If deploying your own app to production, do not disable secure cookies.
   options.DangerouslyDisableSecureCookies = builder.Environment.IsDevelopment();
-  options.LoginUrl = $"http://{demoAppHost}/api/auth/login";
+  options.LoginUrl = $"http://localhost:6001/api/auth/login";
   options.LoginStateSecret = "7GO1ima/U48udQ/nXZqAe3EpmFhNGvQ7Qc3xGi+l/Rc=";
-  options.RedirectUri = $"http://{demoAppHost}/api/auth/callback";
-  options.RootDomain = isVanityDomainFormat ? "business.invotastic.com:6001" : string.Empty;
+  options.RedirectUri = $"http://localhost:6001/api/auth/callback";
+  options.RootDomain = string.Empty;
   options.Scopes = ["openid", "offline_access", "email", "roles", "profile"];
   options.UseCustomDomains = false;
-  options.UseTenantSubdomains = isVanityDomainFormat;
-  options.WristbandApplicationDomain = builder.Configuration["APPLICATION_DOMAIN"];
+  options.UseTenantSubdomains = false;
+  options.WristbandApplicationDomain = builder.Configuration["APPLICATION_VANITY_DOMAIN"];
 });
 
 // Add cookie session for authenticated users
