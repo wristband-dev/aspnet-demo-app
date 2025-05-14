@@ -38,7 +38,7 @@ public static class AuthRoutes
                 var callbackResult = await wristbandAuth.Callback(httpContext);
 
                 // Some edge cases will attempt to redirect to a login URL to restart the flow.
-                if (callbackResult.Result == CallbackResultType.REDIRECT_REQUIRED)
+                if (callbackResult.Type == CallbackResultType.REDIRECT_REQUIRED)
                 {
                     return Results.Redirect(callbackResult.RedirectUrl);
                 }
