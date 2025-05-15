@@ -42,7 +42,7 @@ builder.Services.AddWristbandAuth(options =>
   options.Scopes = ["openid", "offline_access", "email", "roles", "profile"];
   options.UseCustomDomains = false;
   options.UseTenantSubdomains = false;
-  options.WristbandApplicationDomain = builder.Configuration["APPLICATION_VANITY_DOMAIN"];
+  options.WristbandApplicationVanityDomain = builder.Configuration["APPLICATION_VANITY_DOMAIN"];
 });
 
 // Add cookie session for authenticated users
