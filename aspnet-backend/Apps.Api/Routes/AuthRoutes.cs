@@ -1,5 +1,3 @@
-using System.Security.Claims;
-
 using Wristband.AspNet.Auth;
 
 public static class AuthRoutes
@@ -43,14 +41,14 @@ public static class AuthRoutes
                     return Results.Redirect(callbackResult.RedirectUrl);
                 }
 
-                // Generate the CSRF secret.
-                var csrfSecret = CsrfUtils.GenerateCsrfSecret();
+                // Generate the CSRF token.
+                var csrfToken = CsrfUtils.CreateCsrfToken();
 
                 // Initialize the auth session cookie.
-                await SessionUtils.SetSessionClaims(httpContext, callbackResult.CallbackData, csrfSecret);
+                await SessionUtils.SetSessionClaims(httpContext, callbackResult.CallbackData, csrfToken);
 
-                // Generate the CSRF token cookie.
-                CsrfUtils.UpdateCsrfTokenCookie(httpContext, csrfSecret);
+                // Update the CSRF cookie.
+                CsrfUtils.UpdateCsrfCookie(httpContext, csrfToken);
 
                 return Results.Redirect("http://localhost:6001");
             }
@@ -68,7 +66,7 @@ public static class AuthRoutes
         // ////////////////////////////////////
         app.MapGet("/auth/logout", async (HttpContext httpContext, IWristbandAuthService wristbandAuth) =>
         {
-            httpContext.Response.Cookies.Delete("XSRF-TOKEN");
+            httpContext.Response.Cookies.Delete("CSRF-TOKEN");
 
             var refreshToken = SessionUtils.GetStringSessionClaim(httpContext, "refreshToken");
             var tenantCustomDomain = SessionUtils.GetStringSessionClaim(httpContext, "tenantCustomDomain");
