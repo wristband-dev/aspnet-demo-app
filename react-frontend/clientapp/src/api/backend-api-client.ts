@@ -6,8 +6,8 @@ import { redirectToLogin } from "@wristband/react-client-auth";
 /* CSRF_TOUCHPOINT */
 const backendApiClient = axios.create({
   headers: { "Content-Type": "application/json", Accept: "application/json" },
-  xsrfCookieName: "XSRF-TOKEN",
-  xsrfHeaderName: "X-XSRF-TOKEN",
+  xsrfCookieName: "CSRF-TOKEN",
+  xsrfHeaderName: "X-CSRF-TOKEN",
   withXSRFToken: true,
   withCredentials: true,
 });

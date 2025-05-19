@@ -73,7 +73,6 @@ app.UseSwaggerUI();
 // Auth + CSRF Middlewares
 app.UseAuthentication();
 app.UseMiddleware<AuthMiddleware>();
-app.UseMiddleware<CsrfMiddleware>();
 
 // API Routes
 app.MapDefaultEndpoints();

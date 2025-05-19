@@ -1,24 +1,16 @@
 using System.Security.Cryptography;
-using System.Text;
 
 public static class CsrfUtils
 {
-    private const string _xsrfCookieName = "XSRF-TOKEN";
-    private const string _xsrfTokenHeaderName = "X-XSRF-TOKEN";
-
-    public static string GenerateCsrfSecret()
+    public static string CreateCsrfToken()
     {
       var secretBytes = RandomNumberGenerator.GetBytes(32);
-      return Convert.ToBase64String(secretBytes);
+      return Convert.ToHexString(secretBytes).ToLower();
     }
 
-    public static void UpdateCsrfTokenCookie(HttpContext httpContext, string csrfSecret)
+    public static void UpdateCsrfCookie(HttpContext httpContext, string csrfToken)
     {
-        using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(csrfSecret));
-        var tokenBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(csrfSecret));
-        var csrfToken = Convert.ToBase64String(tokenBytes);
-
-        httpContext.Response.Cookies.Append(_xsrfCookieName, csrfToken, new CookieOptions
+        httpContext.Response.Cookies.Append("CSRF-TOKEN", csrfToken, new CookieOptions
         {
             HttpOnly = false,
             Secure = false, // NOTE: Must be "true" in Production
@@ -28,24 +20,5 @@ public static class CsrfUtils
             Expires = DateTimeOffset.UtcNow.AddMinutes(30),
             MaxAge = TimeSpan.FromMinutes(30)
         });
-    }
-
-    public static bool IsCsrfTokenValid(HttpContext httpContext, string csrfSecret)
-    {
-        var csrfToken = string.Empty;
-        if (httpContext.Request.Headers.TryGetValue(_xsrfTokenHeaderName, out var token))
-        {
-            csrfToken = token.FirstOrDefault()?.ToString() ?? string.Empty;
-        }
-
-        if (string.IsNullOrEmpty(csrfSecret) || string.IsNullOrEmpty(csrfToken))
-        {
-            return false;
-        }
-
-        using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(csrfSecret));
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(csrfSecret));
-        var computedToken = Convert.ToBase64String(computedHash);
-        return csrfToken == computedToken;
     }
 }

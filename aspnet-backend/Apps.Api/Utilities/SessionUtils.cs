@@ -8,26 +8,26 @@ using Wristband.AspNet.Auth;
 
 public static class SessionUtils
 {
-  static string? GetUserInfoValue(UserInfo userinfo, string key) =>
-      userinfo.TryGetValue(key, out var obj) ? obj.GetString() : null;
+    static string? GetUserInfoValue(UserInfo userinfo, string key) =>
+        userinfo.TryGetValue(key, out var obj) ? obj.GetString() : null;
 
-  static Claim CreateClaim(string type, string? value) => new(type, value ?? string.Empty);
+    static Claim CreateClaim(string type, string? value) => new(type, value ?? string.Empty);
 
-  public static async Task SetSessionClaims(HttpContext context, CallbackData callbackData, string csrfSecret)
-  {
-    // Extract fields from userinfo to stick into the session
-    var userinfo = callbackData.Userinfo;
-    var userId = GetUserInfoValue(userinfo, "sub");
-    var email = GetUserInfoValue(userinfo, "email");
-    var fullName = GetUserInfoValue(userinfo, "name");
-    var idpName = GetUserInfoValue(userinfo, "idp_name");
-    var tenantId = GetUserInfoValue(userinfo, "tnt_id");
-    var roles = userinfo.TryGetValue("roles", out var rolesClaim) && rolesClaim.ValueKind == JsonValueKind.Array
-        ? JsonSerializer.Deserialize<List<WristbandRole>>(rolesClaim.GetRawText()) ?? new List<WristbandRole>()
-        : new List<WristbandRole>();
+    public static async Task SetSessionClaims(HttpContext context, CallbackData callbackData, string csrfToken)
+    {
+        // Extract fields from userinfo to stick into the session
+        var userinfo = callbackData.Userinfo;
+        var userId = GetUserInfoValue(userinfo, "sub");
+        var email = GetUserInfoValue(userinfo, "email");
+        var fullName = GetUserInfoValue(userinfo, "name");
+        var idpName = GetUserInfoValue(userinfo, "idp_name");
+        var tenantId = GetUserInfoValue(userinfo, "tnt_id");
+        var roles = userinfo.TryGetValue("roles", out var rolesClaim) && rolesClaim.ValueKind == JsonValueKind.Array
+            ? JsonSerializer.Deserialize<List<WristbandRole>>(rolesClaim.GetRawText()) ?? new List<WristbandRole>()
+            : new List<WristbandRole>();
 
-    // Prepare claims for session
-    var claims = new List<Claim>
+        // Prepare claims for session
+        var claims = new List<Claim>
         {
             CreateClaim("accessToken", callbackData.AccessToken),
             CreateClaim("refreshToken", callbackData.RefreshToken),
@@ -41,60 +41,60 @@ public static class SessionUtils
             CreateClaim("roles", JsonSerializer.Serialize(roles)),
             CreateClaim("tenantDomainName", callbackData.TenantDomainName),
             CreateClaim("tenantCustomDomain", callbackData.TenantCustomDomain),
-            CreateClaim("csrfSecret", csrfSecret)
+            CreateClaim("csrfToken", csrfToken)
         };
 
-    // Save user claims in the session
-    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-    await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), new AuthenticationProperties
-    {
-      IsPersistent = true,
-    });
-  }
-
-  public static async Task UpdateTokenClaims(HttpContext context, TokenData? tokenData)
-  {
-    var claims = context.User.Claims;
-    if (tokenData != null)
-    {
-      // Update token claims if refresh was necessary
-      claims = claims
-          .Where(c => c.Type is not ("accessToken" or "refreshToken" or "expiresAt"))
-          .Append(new Claim("accessToken", tokenData.AccessToken))
-          .Append(new Claim("refreshToken", tokenData.RefreshToken ?? string.Empty))
-          // Convert expiration seconds to a Unix timestamp in milliseconds.
-          .Append(new Claim("expiresAt", $"{DateTimeOffset.Now.ToUnixTimeMilliseconds() + (tokenData.ExpiresIn * 1000)}"))
-          .ToList();
+        // Save user claims in the session
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), new AuthenticationProperties
+        {
+            IsPersistent = true,
+        });
     }
 
-    // Save updated claims and touch the session to extend expiration window
-    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-    await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties
+    public static async Task UpdateTokenClaims(HttpContext context, TokenData? tokenData)
     {
-      IsPersistent = true, 
-    });
-  }
+        var claims = context.User.Claims;
+        if (tokenData != null)
+        {
+            // Update token claims if refresh was necessary
+            claims = claims
+                .Where(c => c.Type is not ("accessToken" or "refreshToken" or "expiresAt"))
+                .Append(new Claim("accessToken", tokenData.AccessToken))
+                .Append(new Claim("refreshToken", tokenData.RefreshToken ?? string.Empty))
+                // Convert expiration seconds to a Unix timestamp in milliseconds.
+                .Append(new Claim("expiresAt", $"{DateTimeOffset.Now.ToUnixTimeMilliseconds() + (tokenData.ExpiresIn * 1000)}"))
+                .ToList();
+        }
 
-  public static async Task DestroySession(HttpContext context)
-  {
-    await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-  }
+        // Save updated claims and touch the session to extend expiration window
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties
+        {
+            IsPersistent = true, 
+        });
+    }
 
-  public static string GetStringSessionClaim(HttpContext context, string claimName)
-  {
-    return context.User.FindFirst(claimName)?.Value ?? string.Empty;
-  }
+    public static async Task DestroySession(HttpContext context)
+    {
+        await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+    }
 
-  public static List<WristbandRole> GetRoles(HttpContext context)
-  {
-    var claimValue = context.User.FindFirst("roles")?.Value;
-    return !string.IsNullOrEmpty(claimValue)
-        ? JsonSerializer.Deserialize<List<WristbandRole>>(claimValue) ?? []
-        : [];
-  }
+    public static string GetStringSessionClaim(HttpContext context, string claimName)
+    {
+        return context.User.FindFirst(claimName)?.Value ?? string.Empty;
+    }
 
-  public static long GetExpiresAt(HttpContext context)
-  {
-    return long.TryParse(context.User.FindFirst("expiresAt")?.Value, out var expiresAt) ? expiresAt : 0;
-  }
+    public static List<WristbandRole> GetRoles(HttpContext context)
+    {
+        var claimValue = context.User.FindFirst("roles")?.Value;
+        return !string.IsNullOrEmpty(claimValue)
+            ? JsonSerializer.Deserialize<List<WristbandRole>>(claimValue) ?? []
+            : [];
+    }
+
+    public static long GetExpiresAt(HttpContext context)
+    {
+        return long.TryParse(context.User.FindFirst("expiresAt")?.Value, out var expiresAt) ? expiresAt : 0;
+    }
 }

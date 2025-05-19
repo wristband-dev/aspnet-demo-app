@@ -28,9 +28,21 @@ public class AuthMiddleware
         if (!authResult.Succeeded || authResult.Principal == null)
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync("Unauthorized access: authentication failed");
             return;
         }
+
+        /* CSRF_TOUCHPOINT */
+        // Validate the CSRF token from the session
+        var csrfToken = SessionUtils.GetStringSessionClaim(context, "csrfToken");
+        var csrfHeaderValue = context.Request.Headers["X-CSRF-TOKEN"].FirstOrDefault();
+        if (string.IsNullOrEmpty(csrfToken) || csrfToken != csrfHeaderValue)
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return;
+        }
+
+        // Update the CSRF cookie
+        CsrfUtils.UpdateCsrfCookie(context, csrfToken);
 
         try
         {

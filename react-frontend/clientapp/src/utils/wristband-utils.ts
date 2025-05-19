@@ -100,6 +100,6 @@ export const isUnauthorizedError = (error: unknown) => isHttpStatusError(error, 
 export const isForbiddenError = (error: unknown) => isHttpStatusError(error, 403);
 
 export function isOwnerRole(roleName: string) {
-  // Should match the Role "name" field, i.e. "app:invotasticb2b:owner"
+  // Should match the Role "name" field, i.e. "app:invotastic:owner"
   return /^app:.*:owner$/.test(roleName);
 }
