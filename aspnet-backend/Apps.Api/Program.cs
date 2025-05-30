@@ -35,13 +35,11 @@ builder.Services.AddWristbandAuth(options =>
   options.CustomApplicationLoginPageUrl = string.Empty;
   // NOTE: If deploying your own app to production, do not disable secure cookies.
   options.DangerouslyDisableSecureCookies = builder.Environment.IsDevelopment();
+  options.IsApplicationCustomDomainActive = false;
   options.LoginUrl = $"http://localhost:6001/api/auth/login";
   options.LoginStateSecret = "7GO1ima/U48udQ/nXZqAe3EpmFhNGvQ7Qc3xGi+l/Rc=";
   options.RedirectUri = $"http://localhost:6001/api/auth/callback";
-  options.RootDomain = string.Empty;
   options.Scopes = ["openid", "offline_access", "email", "roles", "profile"];
-  options.UseCustomDomains = false;
-  options.UseTenantSubdomains = false;
   options.WristbandApplicationVanityDomain = builder.Configuration["APPLICATION_VANITY_DOMAIN"];
 });
 
