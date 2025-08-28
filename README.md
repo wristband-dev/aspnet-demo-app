@@ -61,7 +61,7 @@ First, make sure you sign up for a Wristband account at [https://wristband.dev](
 After your Wristband account is set up, log in to the Wristband dashboard.  Once you land on the home page of the dashboard, click the button labelled "Add Demo App".  Make sure you choose the following options:
 
 - Step 1: Subject to Authenticate - Humans
-- Step 2: Client Framework - ASP.NET / C#
+- Step 2: Application Framework - ASP.NET (C#) Backend, React Frontend
 
 You can also follow the [Demo App Guide](https://docs.wristband.dev/docs/setting-up-a-demo-app) for more information.
 
