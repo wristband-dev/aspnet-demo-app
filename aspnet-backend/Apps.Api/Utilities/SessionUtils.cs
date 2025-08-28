@@ -31,8 +31,7 @@ public static class SessionUtils
         {
             CreateClaim("accessToken", callbackData.AccessToken),
             CreateClaim("refreshToken", callbackData.RefreshToken),
-            // Convert expiration seconds to a Unix timestamp in milliseconds.
-            CreateClaim("expiresAt", $"{DateTimeOffset.Now.ToUnixTimeMilliseconds() + (callbackData.ExpiresIn * 1000)}"),
+            CreateClaim("expiresAt", $"{callbackData.ExpiresAt}"),
             CreateClaim("email", email),
             CreateClaim("fullName", fullName),
             CreateClaim("idpName", idpName),
@@ -62,8 +61,7 @@ public static class SessionUtils
                 .Where(c => c.Type is not ("accessToken" or "refreshToken" or "expiresAt"))
                 .Append(new Claim("accessToken", tokenData.AccessToken))
                 .Append(new Claim("refreshToken", tokenData.RefreshToken ?? string.Empty))
-                // Convert expiration seconds to a Unix timestamp in milliseconds.
-                .Append(new Claim("expiresAt", $"{DateTimeOffset.Now.ToUnixTimeMilliseconds() + (tokenData.ExpiresIn * 1000)}"))
+                .Append(new Claim("expiresAt", $"{tokenData.ExpiresAt}"))
                 .ToList();
         }
 
