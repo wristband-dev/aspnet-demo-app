@@ -10,7 +10,7 @@
     <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-    <PackageReference Include="Wristband.AspNet.Auth" Version="2.1.0" />
+    <PackageReference Include="Wristband.AspNet.Auth" Version="3.0.0" />
   </ItemGroup>
 
 	<ItemGroup>
