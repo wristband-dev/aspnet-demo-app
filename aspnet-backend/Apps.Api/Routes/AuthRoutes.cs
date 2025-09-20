@@ -14,8 +14,8 @@ public static class AuthRoutes
             try
             {
                 /* WRISTBAND_TOUCHPOINT - AUTHENTICATION */
-                var wristbandLoginUrl = await wristbandAuth.Login(httpContext, null);
-                return Results.Redirect(wristbandLoginUrl);
+                var wristbandAuthorizeUrl = await wristbandAuth.Login(httpContext, null);
+                return Results.Redirect(wristbandAuthorizeUrl);
             } catch (Exception ex)
             {
                 Console.WriteLine($"Unexpected error: {ex}");
@@ -77,7 +77,6 @@ public static class AuthRoutes
             /* WRISTBAND_TOUCHPOINT - AUTHENTICATION */
             var wristbandLogoutUrl = await wristbandAuth.Logout(httpContext, new LogoutConfig
             {
-                RedirectUrl = null,
                 RefreshToken = refreshToken ?? null,
                 TenantCustomDomain = tenantCustomDomain ?? null,
                 TenantDomainName = tenantDomainName ?? null,

@@ -13,10 +13,10 @@ public static class CsrfUtils
         httpContext.Response.Cookies.Append("CSRF-TOKEN", csrfToken, new CookieOptions
         {
             HttpOnly = false,
-            Secure = true, // NOTE: Must be "true" in Production
+            Secure = false, // IMPORTANT: Secure must be "true" in Production!!
             SameSite = SameSiteMode.Strict, // If dealing with CORS, you may need to use "Lax" mode.
             Path = "/",
-            // Ideally should match the session cookie expiration
+            // Match the session cookie expiration
             Expires = DateTimeOffset.UtcNow.AddMinutes(30),
             MaxAge = TimeSpan.FromMinutes(30)
         });
