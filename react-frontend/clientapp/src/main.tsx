@@ -14,8 +14,7 @@ const transformSessionMetadata = (metadata: unknown): MySessionData => {
   const apiSessionData = metadata as ApiSessionData;
   return {
     email: apiSessionData.email,
-    fullName: apiSessionData.fullName,
-    tenantDomainName: apiSessionData.tenantDomainName,
+    tenantName: apiSessionData.tenantName,
     hasOwnerRole: apiSessionData.roles.some(role => isOwnerRole(role.name))
   };
 }
@@ -26,7 +25,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <WristbandAuthProvider<MySessionData>
       transformSessionMetadata={transformSessionMetadata}
       loginUrl='/api/auth/login'
-      sessionUrl='/api/session'
+      sessionUrl='/api/auth/session'
+      tokenUrl='/api/auth/token'
     >
       <App />
     </WristbandAuthProvider>
