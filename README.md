@@ -21,32 +21,45 @@
 
 # Wristband Multi-Tenant Demo App for ASP.NET Core (C#)
 
-This repo contains a simple Hello World example demonstrating how to use the Wristband Auth SDK with a C# backend and a React Vite frontend. The repo uses Microsoft Aspire to launch the C# Asp.Net Core Backend API project, frontend project, and a YARP (Yet Another Reverse Proxy) to expose the frontend and backend projects as a single endpoint to eliminate the need for CORS.
+This demo app consists of:
 
-When an unauthenticated user attempts to access the frontend, it will redirect to the C# backend's Login Endpoint, which in turn redirects the user to Wristband to authenticate. Wristband then redirects the user back to your application's Callback Endpoint which sets a session cookie before returning the user's browser to the frontend project. The frontend does not need any secrets or other special handling since all authentication/authorization is handled by your C# server
+- **C# Backend**: A C# backend with Wristband authentication integration
+- **React Frontend**: A React frontend with authentication context
+
+When an unauthenticated user attempts to access the frontend, it will redirect to the C# backend's Login Endpoint, which in turn redirects the user to Wristband to authenticate. Wristband then redirects the user back to your C#'s Callback Endpoint which sets a session cookie before returning the user's browser to the React frontend.
+
+> [!NOTE]
+> This repo uses Microsoft Aspire to launch the C# ASP.NET Core Backend API project, frontend project, and a YARP (Yet Another Reverse Proxy) to expose the frontend and backend projects as a single endpoint to eliminate the need for CORS.
 
 <br>
-<hr />
+
+---
+
 <br>
 
 ## Requirements
 
-This demo app requires .NET SDK 8 for the C# server that runs. If you don't have it installed already, you can download and install it from the official .NET website:
-1. Visit [https://dotnet.microsoft.com/download/dotnet/8.0](https://dotnet.microsoft.com/download/dotnet/8.0).
-2. Download and run the .NET 8 SDK installer for your operating system.
+This demo app requires .NET SDK 8, 9, or 10. If you don't have any of these installed, you can download and install from the official .NET website:
+1. Visit [https://dotnet.microsoft.com/download](https://dotnet.microsoft.com/download).
+2. Download and run the .NET SDK installer for your operating system (version 8.0, 9.0, or 10.0).
 3. Verify the installation by opening a terminal or command prompt and running:
 ```bash
-dotnet --version # Should show 8.0.x or higher
+dotnet --version # Should show 8.x.x or higher
 ```
 
-Additionally, the React frontend requires Node.js version 20 or higher with `npm`. To install:
+Additionally, the React frontend's Vite server requires Node.js version 20 or higher with `npm`. To install:
 1. Visit [https://nodejs.org](https://nodejs.org).
 2. Download and run the installer for the LTS version (which should be v20.x or higher).
 3. Verify the installation by opening a terminal or command prompt and running:
 ```bash
 node --version   # Should show v20.x.x or higher
-npm --version    # Should show v10.x.x or higher (for Node 20+)
 ```
+
+<br>
+
+---
+
+<br>
 
 ## Getting Started
 
@@ -58,10 +71,11 @@ First, make sure you sign up for a Wristband account at [https://wristband.dev](
 
 ### 2) Provision the .NET/C# demo application in the Wristband Dashboard.
 
-After your Wristband account is set up, log in to the Wristband dashboard.  Once you land on the home page of the dashboard, click the button labelled "Add Demo App".  Make sure you choose the following options:
+After your Wristband account is set up, log in to the Wristband dashboard.  Once you land on the home page of the dashboard, click the "Add Application" button.  Make sure you choose the following options:
 
-- Step 1: Subject to Authenticate - Humans
-- Step 2: Application Framework - ASP.NET (C#) Backend, React Frontend
+- Step 1: Try a Demo
+- Step 2: Subject to Authenticate - Humans
+- Step 3: Application Framework - ASP.NET (C#) Backend, React Frontend
 
 You can also follow the [Demo App Guide](https://docs.wristband.dev/docs/setting-up-a-demo-app) for more information.
 
@@ -113,10 +127,16 @@ dotnet run --project ./react-frontend/AppHost/
 For debugging, using either Visual Studio or Rider, launch the AppHost project using the Aspire launch configuration. The [Microsoft Aspire dashboard](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/overview) is located at `http://localhost:15043` where you have access to logs and traces.
 
 <br>
-<hr>
+
+---
+
 <br>
 
 ## How to interact with the demo app
+
+### Home Page
+
+For reference, the home page of this demo app can be accessed at [http://localhost:6001](http://localhost:6001).
 
 ### Signup Users
 
@@ -125,10 +145,6 @@ Now that the demo app is up and running, you can sign up your first customer on 
 - `https://{application_vanity_domain}/signup`, where `{application_vanity_domain}` should be replaced with the value of the "Application Vanity Domain" value of the application (can be found in the Wristband Dashboard by clicking the Application Settings side nav menu).
 
 This signup page is hosted by Wristband.  Completing the signup form will provision both a new tenant with the specified tenant domain name and a new user that is assigned to that tenant.
-
-### Home Page
-
-For reference, the home page of this demo app can be accessed at [http://localhost:6001/home](http://localhost:6001/home).
 
 ### Application-level Login (Tenant Discovery)
 
@@ -142,13 +158,9 @@ This login page is hosted by Wristband.  Here, the user will be prompted to ente
 
 If users wish to directly access the Tenant-level Login Page without having to go through the Application-level Login Page, they can do so at the following locations:
 
-- Localhost domain format: [http://localhost:6001/api/auth/login?tenant_domain={tenant_domain}](http://localhost:6001/home), where `{tenant_domain}` should be replaced with the value of the desired tenant's domain name.
+- Localhost domain format: [http://localhost:6001/api/auth/login?tenant_name={tenant_name}](http://localhost:6001/api/auth/login?tenant_name={tenant_name}), where `{tenant_name}` should be replaced with the value of the desired tenant's domain name.
 
 This login page is hosted by Wristband.  Here, the user will be prompted to enter their credentials in order to login to the application.
-
-### RBAC
-
-When a new user signs up their company, they are assigned the "Owner" role by default and have full access to their company resources.  Owners of a company can also invite new users into their company.  Invited users can be assigned either the "Owner" role or the "Viewer" role.
 
 ### Architecture
 
@@ -167,12 +179,8 @@ API calls made from the frontend to C# pass along the application session cookie
 - "Touching" the application session cookie to extend session expiration
 - Validating the CSRF token
 
-### Wristband Code Touchpoints
+---
 
-Within the demo app code, you can search in your IDE of choice for the text `WRISTBAND_TOUCHPOINT`.  This will show various places in frontend code and C# backend code where Wristband is involved.
-
-<br>
-<hr />
 <br/>
 
 ## Wristband ASP.NET Auth SDK
@@ -182,17 +190,6 @@ This demo app is leveraging the [Wristband aspnet-auth SDK](https://github.com/w
 ## Wristband React Client Auth SDK
 
 This demo app is leveraging the [Wristband react-client-auth SDK](https://github.com/wristband-dev/react-client-auth) for any authenticated session interaction in the React frontend. Refer to that GitHub repository for more information.
-
-## CSRF Protection
-
-Cross Site Request Forgery (CSRF) is a security vulnerability where attackers trick authenticated users into unknowingly submitting malicious requests to your application. This demo app is leveraging a technique called the Syncrhonizer Token Pattern to mitigate CSRF attacks by employing two cookies: a session cookie for user authentication and a CSRF token cookie containing a unique token. With each request, the CSRF token is included both in the cookie and the request payload, enabling server-side validation to prevent CSRF attacks.
-
-Refer to the [OWASP CSRF Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html) for more information about this topic.
-
-> [!WARNING]
-> Your own application should take effort to mitigate CSRF attacks in addition to any Wristband authentication, and it is highly recommended to take a similar approach as this demo app to protect against thse types of attacks.
-
-<br/>
 
 ## Questions
 

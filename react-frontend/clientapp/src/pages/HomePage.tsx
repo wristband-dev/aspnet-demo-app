@@ -1,101 +1,69 @@
-import { useCallback, useState } from "react";
-import { isAxiosError } from "axios";
-import { redirectToLogout, useWristbandSession } from '@wristband/react-client-auth';
+import { useState } from 'react';
+import { useWristbandAuth } from '@wristband/react-client-auth';
 
-import csharpLogo from "../assets/csharp.png";
-import reactLogo from "../assets/react.svg";
-import wristbandLogo from "../assets/wristband.png";
-import { backendApiClient } from "../api/backend-api-client";
-import { MySessionData } from "../types";
+import csharpLogo from '../assets/csharp.png';
+import reactLogo from '../assets/react.svg';
+import wristbandLogo from '../assets/wristband.png';
+import { TabButton } from '../components/TabButton';
+import { SessionTester } from '../components/SessionTester';
+import { TokenTester } from '../components/TokenTester';
 
-const HomePage = () => {
-  // React State
-  const [protectedResult, setProtectedResult] = useState<number>(0);
-  const [unprotectedResult, setUnprotectedResult] = useState<number>(0);
+function HomePage() {
+  const [activeTab, setActiveTab] = useState<'session' | 'token'>('session');
 
   /* WRISTBAND_TOUCHPOINT - AUTHENTICATION */
-  const { metadata, userId, tenantId, updateMetadata } = useWristbandSession<MySessionData>();
-
-  const { hasOwnerRole } = metadata;
-  const mySessionData = JSON.stringify({ userId, tenantId, metadata });
-
-  const generateRandomNameForSession = () => {
-    const newName = Math.random().toString(36).substring(2);
-    updateMetadata({ fullName: newName });
-    alert(`New fullName for React Context:\n\n"${newName}"`)
-  };
-
-  const callProtectedEndpoint = useCallback(async () => {
-    try {
-      const response = await backendApiClient.get("/api/protected");
-      const result = response.data as { message: string, value: number };
-      setProtectedResult((prior) => prior + result.value);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        console.error('Axios Error:', error.response?.status, error.response?.data);
-      } else {
-        console.error('Unexpected Error:', error);
-      }
-    }
-  }, [setProtectedResult]);
-
-  const callUnprotectedEndpoint = useCallback(async () => {
-    try {
-      const response = await backendApiClient.get("/api/unprotected");
-      const result = response.data as { message: string, value: number };
-      setUnprotectedResult((prior) => prior + result.value);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        console.error('Axios Error:', error.response?.status, error.response?.data);
-      } else {
-        console.error('Unexpected Error:', error);
-      }
-    }
-  }, [setUnprotectedResult]);
+  const { isAuthenticated } = useWristbandAuth();
 
   return (
-    <>
-      <div>
-        <a href="https://dotnet.microsoft.com/en-us/languages/csharp" target="_blank">
-          <img src={csharpLogo} className="logo" alt="Csharp logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo" alt="React logo" />
-        </a>
-        <a href="https://wristband.dev" target="_blank">
-          <img src={wristbandLogo} className="logo react" alt="Wristband logo" />
-        </a>
-      </div>
-      <h1>C# + React + Wristband</h1>
-      <div className="card">
-        <button onClick={() => alert(`${mySessionData}`)}>
-          View Session Context Data
-        </button>
-      </div>
-      {hasOwnerRole && (
-        <div className="card">
-          <button onClick={generateRandomNameForSession}>
-            Update Session Context Data
-          </button>
+    <div
+      className={`font-geist-sans flex flex-col items-center justify-items-center min-h-screen p-8 pt-16`}
+    >
+      <main className="flex flex-col gap-8 row-start-2 items-center w-full max-w-2xl">
+        <div className="flex items-center gap-4">
+          <a href="https://dotnet.microsoft.com/en-us/languages/csharp" target="_blank">
+            <img src={csharpLogo} width={60} height={60} alt="C# logo" />
+          </a>
+          <a href="https://react.dev" target="_blank">
+            <img src={reactLogo} width={60} height={60} alt="React logo" />
+          </a>
+          <a href="https://wristband.dev" target="_blank">
+            <img src={wristbandLogo} width={60} height={60} alt="Wristband logo" className="animate-spin-slow" />
+          </a>
         </div>
-      )}
-      <div className="card">
-        <button onClick={callProtectedEndpoint}>
-          Protected API count {protectedResult}
-        </button>
-      </div>
-      <div className="card">
-        <button onClick={callUnprotectedEndpoint}>
-          Unprotected API count {unprotectedResult}
-        </button>
-      </div>
-      <div className="card">
-        <button onClick={() => redirectToLogout('/api/auth/logout')}>
-          Logout
-        </button>
-      </div>
-    </>
+
+        <h1 className="text-2xl mb-1">C# + React + Wristband</h1>
+
+        {isAuthenticated && (
+          <div className="flex flex-col gap-2 w-full">
+            <hr className="my-2" />
+            <div className="flex border-b border-gray-200 dark:border-gray-700 mb-4">
+              <TabButton
+                title="Test with Session"
+                isActive={activeTab === 'session'}
+                onClick={() => setActiveTab('session')}
+              />
+              <TabButton
+                title="Test with Token"
+                isActive={activeTab === 'token'}
+                onClick={() => setActiveTab('token')}
+              />
+            </div>
+            <div className="flex flex-col gap-2 w-full">
+              {activeTab === 'session' && <SessionTester />}
+              {activeTab === 'token' && <TokenTester />}
+            </div>
+            <hr className="mt-6 mb-8" />
+            <button
+              onClick={() => window.location.href = '/api/auth/logout'}
+              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Logout
+            </button>
+          </div>
+        )}
+      </main>
+    </div>
   );
-};
+}
 
 export { HomePage };
