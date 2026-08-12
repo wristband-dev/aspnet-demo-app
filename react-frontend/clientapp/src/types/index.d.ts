@@ -2,7 +2,7 @@ export type MySessionData = {
   email: string;
   hasOwnerRole: boolean;
   tenantName: string;
-}
+};
 
 export type ApiSessionData = {
   email: string;
@@ -12,4 +12,4 @@ export type ApiSessionData = {
     name: string;
     displayName: string;
   }[];
-}
+};

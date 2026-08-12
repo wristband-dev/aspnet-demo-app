@@ -15,9 +15,7 @@ function HomePage() {
   const { isAuthenticated } = useWristbandAuth();
 
   return (
-    <div
-      className={`font-geist-sans flex flex-col items-center justify-items-center min-h-screen p-8 pt-16`}
-    >
+    <div className={`font-geist-sans flex flex-col items-center justify-items-center min-h-screen p-8 pt-16`}>
       <main className="flex flex-col gap-8 row-start-2 items-center w-full max-w-2xl">
         <div className="flex items-center gap-4">
           <a href="https://dotnet.microsoft.com/en-us/languages/csharp" target="_blank">
@@ -54,7 +52,7 @@ function HomePage() {
             </div>
             <hr className="mt-6 mb-8" />
             <button
-              onClick={() => window.location.href = '/api/auth/logout'}
+              onClick={() => (window.location.href = '/api/auth/logout')}
               className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
             >
               Logout

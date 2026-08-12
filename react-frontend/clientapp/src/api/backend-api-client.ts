@@ -1,13 +1,13 @@
-import axios from "axios";
+import axios from 'axios';
 
-import { isForbiddenError, isUnauthorizedError } from "../utils/wristband-utils";
-import { redirectToLogin } from "@wristband/react-client-auth";
+import { isForbiddenError, isUnauthorizedError } from '../utils/wristband-utils';
+import { redirectToLogin } from '@wristband/react-client-auth';
 
 /* CSRF_TOUCHPOINT */
 const backendApiClient = axios.create({
-  headers: { "Content-Type": "application/json", Accept: "application/json" },
-  xsrfCookieName: "CSRF-TOKEN",
-  xsrfHeaderName: "X-CSRF-TOKEN",
+  headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+  xsrfCookieName: 'CSRF-TOKEN',
+  xsrfHeaderName: 'X-CSRF-TOKEN',
   withXSRFToken: true,
   withCredentials: true,
 });

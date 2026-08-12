@@ -12,7 +12,7 @@ export function SessionTester() {
     try {
       setIsLoading(true);
       const response = await backendApiClient.get('/api/session/protected');
-      const data = response.data as { message: string, value: number };
+      const data = response.data as { message: string; value: number };
       setResult(JSON.stringify(data, null, 2));
     } catch (error) {
       handleApiError(error);
@@ -38,8 +38,8 @@ export function SessionTester() {
       <h2 className="font-bold text-lg mb-1">Session-Based Authentication Test</h2>
       <p>
         This button demonstrates cookie-based authentication for API calls. When clicked, the browser automatically
-        sends the session cookie to the ASP.NET server. The server's RequireWristbandSession() validates
-        the session cookie before allowing access to protected resources.
+        sends the session cookie to the ASP.NET server. The server's RequireWristbandSession() validates the session
+        cookie before allowing access to protected resources.
       </p>
       <button
         onClick={callProtectedEndpoint}

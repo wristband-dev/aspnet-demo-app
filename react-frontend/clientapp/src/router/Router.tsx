@@ -1,22 +1,22 @@
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, RouterProvider } from 'react-router';
 
-import { ErrorPage } from "../pages/ErrorPage";
-import { HomePage } from "../pages/HomePage";
-import { LoginPage } from "../pages/LoginPage";
-import { LogoutPage } from "../pages/LogoutPage";
+import { ErrorPage } from '../pages/ErrorPage';
+import { HomePage } from '../pages/HomePage';
+import { LoginPage } from '../pages/LoginPage';
+import { LogoutPage } from '../pages/LogoutPage';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <HomePage />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "login",
+    path: 'login',
     element: <LoginPage />,
   },
   {
-    path: "logout",
+    path: 'logout',
     element: <LogoutPage />,
   },
 ]);
