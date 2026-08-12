@@ -47,12 +47,12 @@ This demo app requires .NET SDK 8, 9, or 10. If you don't have any of these inst
 dotnet --version # Should show 8.x.x or higher
 ```
 
-Additionally, the React frontend's Vite server requires Node.js version 20 or higher with `npm`. To install:
+Additionally, the React frontend's Vite server requires Node.js version 22 or higher with `npm`. To install:
 1. Visit [https://nodejs.org](https://nodejs.org).
-2. Download and run the installer for the LTS version (which should be v20.x or higher).
+2. Download and run the installer for the LTS version (which should be v22.x or higher).
 3. Verify the installation by opening a terminal or command prompt and running:
 ```bash
-node --version   # Should show v20.x.x or higher
+node --version   # Should show v22.x.x or higher
 ```
 
 <br>

@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import { redirectToLogin } from "@wristband/react-client-auth";
+import { redirectToLogin } from '@wristband/react-client-auth';
 
 const LoginPage = () => {
   useEffect(() => redirectToLogin('/api/auth/login'), []);
